@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Home from './components/Home';
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
 
+export const UserContext = createContext();
 function App() {
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: "789065330074610",
+        cookie: true,
+        xfbml: true,
+        version: "v20.0",
+      });
+
+      window.FB.AppEvents.logPageView();
+    };
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <UserContext.Provider value={{user, setUser}}>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/login" element={!user?<Login /> : <Navigate to={'/dashboard'}/>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
+      </UserContext.Provider>
+    </Router>
+
   );
 }
 
