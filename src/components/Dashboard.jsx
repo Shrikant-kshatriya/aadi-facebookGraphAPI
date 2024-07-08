@@ -60,7 +60,7 @@ const Dashboard = () => {
                         };
                         setPageStats(stats);
                     } else {
-                        alert(response.error.error_user_message);
+                        alert(response.error.error_user_msg);
                         console.error('Error fetching page statistics:', response.error);
                     }
                 }
